@@ -28,6 +28,12 @@ public final class Main {
                 new Square("square-1", 3, raster), "RASTER square side=3");
         checkRuntimeSwitch();
 
+        Renderer ascii = new AsciiRenderer();
+        checkResult("T6", "Circle + AsciiRenderer",
+                new Circle("circle-1", 2, ascii), "ASCII circle radius=2 (o)");
+        checkResult("T7", "Square + AsciiRenderer",
+                new Square("square-1", 3, ascii), "ASCII square side=3 [#]");
+
         System.out.printf("SUMMARY: %d/%d PASS%n", passed, total);
     }
 

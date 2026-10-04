@@ -4,6 +4,8 @@ Topic A: Drawing. A Java 17 console application that separates shapes from rende
 
 Repository: https://github.com/aokoshi/SDP-assik3
 
+Base commit (working I1/I2 version): `221f5610dd62b8748042b666bc1f42ad0eaeb331`
+
 ## Design
 
 `Shape` stores the ID and a constructor-injected `Renderer`. `Circle` retains its radius;
@@ -19,6 +21,7 @@ Renderers return local text simulations; no external dependencies are required.
 | Implementor | Renderer | [src/Renderer.java](src/Renderer.java) |
 | I1 | VectorRenderer | [src/VectorRenderer.java](src/VectorRenderer.java) |
 | I2 | RasterRenderer | [src/RasterRenderer.java](src/RasterRenderer.java) |
+| I3 | AsciiRenderer | [src/AsciiRenderer.java](src/AsciiRenderer.java) |
 | Client | Main | [src/Main.java](src/Main.java) |
 
 The bridge field `private Renderer renderer`, constructor, `setImplementation(Renderer)`
@@ -43,8 +46,24 @@ java -cp out Main --demo
 | T3 | Square + VectorRenderer | `VECTOR square side=3` |
 | T4 | Square + RasterRenderer | `RASTER square side=3` |
 | T5 | Same Circle, VectorRenderer to RasterRenderer | `sameObject=true`, `stateUnchanged=true`; `VECTOR circle radius=2` then `RASTER circle radius=2`; ID `circle-switch` and radius `2` unchanged |
+| T6 | Circle + AsciiRenderer | `ASCII circle radius=2 (o)` |
+| T7 | Square + AsciiRenderer | `ASCII square side=3 [#]` |
 
 Each check compares real results with expected values. A failed check prints its expected
-result. All checks run before the calculated summary. This initial version ends with
-`SUMMARY: 5/5 PASS`. The process exits with code 0 on success, 1 on a failed check,
+result. All checks run before the calculated summary. A successful run ends with
+`SUMMARY: 7/7 PASS`. The process exits with code 0 on success, 1 on a failed check,
 or 2 for invalid command-line arguments.
+
+## Independent extension
+
+`AsciiRenderer` implements the existing `Renderer` contract. Within `src/`, the extension
+adds only `AsciiRenderer.java` and updates `Main.java` to run T6 and T7. The original
+abstractions, interface, vector renderer and raster renderer remain unchanged.
+
+[demo-output.txt](demo-output.txt) contains captured output from the final program.
+[extension.diff](extension.diff) records the source changes from the base commit.
+Reproduce the diff with:
+
+```sh
+git diff 221f5610dd62b8748042b666bc1f42ad0eaeb331 HEAD -- src
+```
